@@ -1,4 +1,4 @@
-import locks, terminal, os, threadpool, asyncdispatch, colorize, json, sequtils
+import locks, os, threadpool, asyncdispatch, colorize, json, sequtils
 
 type
   Spinny = ref SpinnyObj
@@ -7,28 +7,29 @@ type
     lock: Lock
     text: string
     running: bool
-    spinnerData: JsonNode
+    frames: seq[JsonNode]
+    frame: string
 
 proc newSpinny*(text: string, spinner: string): Spinny =
   var spinners = readFile("spinners.json")
-  var spinnersJson = parseJson($spinners)
-  result = Spinny(text: text, running: true, spinnerData: spinnersJson[spinner])
-
+  var frames = parseJson($spinners)[spinner]["frames"].getElems()
+  result = Spinny(text: text, running: true, frames: frames)
 
 proc spinnyLoop(spinny: Spinny) {.thread.} =
   var frameCounter = 0
 
   while spinny.running:
-    var spinner = spinny.spinnerData["frames"][frameCounter].getStr()
+    spinny.frame = spinny.frames[frameCounter].getStr()
     acquire(spinny.lock)
     stdout.write("\r")
-    stdout.write(spinner & " " & spinny.text)
+    stdout.write("a" & " " & spinny.text)
     stdout.flushFile()
     release(spinny.lock)
     sleep(80)
-    eraseLine()
 
-    if frameCounter >= spinny.spinnerData["frames"].len - 1: frameCounter = 0 else: frameCounter += 1
+    if frameCounter >= spinny.frames.len - 1:
+      frameCounter = 0
+    else: frameCounter += 1
 
 proc start*(spinny: Spinny) =
   initLock(spinny.lock)
@@ -38,9 +39,13 @@ proc stop(spinny: Spinny) =
   spinny.running = false
   joinThreads(spinny.t)
   echo ""
-  setCursorXPos(0)
 
-var sp = newSpinny("Loading something..".bold.fgRed, "dots2")
+proc setColor(spinny: Spinny, color: proc(x: string): string) =
+  spinny.frames = map(spinny.frames, proc(node: JsonNode): JsonNode = newJString(node.getStr().color()))
+
+
+var sp = newSpinny("Loading something..".bold.fgRed, "bouncingBall")
+sp.setColor(colorize.fgRed)
 sp.start()
 
 for x in countup(5, 10):

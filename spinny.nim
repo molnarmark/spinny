@@ -1,4 +1,9 @@
-import locks, os, threadpool, colorize, json, sequtils, terminal
+import colorize, json
+from terminal import eraseLine
+from sequtils import map
+from os import sleep
+from locks import initLock, Lock, acquire, release
+from threadpool import sync
 
 type
   Spinny = ref SpinnyObj

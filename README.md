@@ -1,6 +1,7 @@
 # Spinny
 
 Spinny is a tiny terminal spinner package for the Nim Programming Language.
+![Spinny in Action](https://github.com/molnarmark/spinny/blob/master/action.gif)
 
 ## Getting Started
 

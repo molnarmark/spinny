@@ -43,6 +43,7 @@ spinner2.error("Sorry, something went wrong during downloading!")
 ```
 
 Spinny uses the [colorize](http://github.com/molnarmark/colorize) library for terminal colors.
+For spinners to use, take a look at the [spinners JSON file](https://github.com/molnarmark/spinny/blob/master/spinners.json). (Credit goes to [sindresorhus](https://github.com/sindresorhus/cli-spinners))
 
 ## API Reference
 The following procs are available on a ```Spinny``` object:

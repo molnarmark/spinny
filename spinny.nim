@@ -1,4 +1,4 @@
-import locks, os, threadpool, asyncdispatch, colorize, json, sequtils, terminal
+import locks, os, threadpool, colorize, json, sequtils, terminal
 
 type
   Spinny = ref SpinnyObj

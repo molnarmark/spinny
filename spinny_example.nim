@@ -18,4 +18,4 @@ spinner2.start()
 for x in countup(5, 10):
   sleep(500)
 
-spinner1.error("Sorry, something went wrong during downloading!")
+spinner2.error("Sorry, something went wrong during downloading!")

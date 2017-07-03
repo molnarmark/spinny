@@ -1,4 +1,7 @@
-# Spinny
+Spinny
+============
+[![GitHub version](https://badge.fury.io/gh/boennemann%2Fbadges.svg)](http://badge.fury.io/gh/boennemann%2Fbadges)
+[![Maintenance](https://img.shields.io/maintenance/yes/2017.svg)]()
 
 Spinny is a tiny terminal spinner package for the Nim Programming Language.
 ![Spinny in Action](https://github.com/molnarmark/spinny/blob/master/action.gif)
@@ -60,5 +63,4 @@ All contributions are welcome. Feel free to make this project better. :)
 * Mark Molnar
 
 ## License
-
-This project is licensed under the MIT License.
+* MIT

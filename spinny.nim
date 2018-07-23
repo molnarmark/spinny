@@ -23,11 +23,11 @@ type
 var spinnyChannel: Channel[SpinnyEvent]
 
 const spinners_json = staticRead("spinners.json")
+# let spinners_json = readFile("spinners.json")
 
 proc newSpinny*(text: string, spinner: string): Spinny =
-  var spinners = spinners_json  # readFile("spinners.json")
-  var frames = parseJson($spinners)[spinner]["frames"].getElems()
-  result = Spinny(text: text, running: true, frames: frames, customSymbol: false)
+  var frames = parseJson($spinners_json)[spinner]["frames"].getElems()
+  Spinny(text: text, running: true, frames: frames, customSymbol: false)
 
 proc setSymbolColor*(spinny: Spinny, color: proc(x: string): string) =
   spinny.frames = map(spinny.frames, proc(node: JsonNode): JsonNode = newJString(node.getStr().color()))

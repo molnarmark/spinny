@@ -23,7 +23,7 @@ type
 var spinnyChannel: Channel[SpinnyEvent]
 
 proc newSpinny*(text: string, spinner: string): Spinny =
-  var spinners = readFile("spinners.json")
+  var spinners = staticRead("spinners.json")  # readFile("spinners.json")
   var frames = parseJson($spinners)[spinner]["frames"].getElems()
   result = Spinny(text: text, running: true, frames: frames, customSymbol: false)
 

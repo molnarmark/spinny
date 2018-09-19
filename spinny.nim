@@ -14,6 +14,7 @@ type
     running: bool
     frames: seq[JsonNode]
     frame: string
+    interval: int
     customSymbol: bool
 
   SpinnyEvent = object
@@ -26,8 +27,11 @@ const spinners_json = staticRead("spinners.json")
 # let spinners_json = readFile("spinners.json")
 
 proc newSpinny*(text: string, spinner: string): Spinny =
-  var frames = parseJson($spinners_json)[spinner]["frames"].getElems()
-  Spinny(text: text, running: true, frames: frames, customSymbol: false)
+  var j = parseJson($spinners_json)[spinner]
+  var frames = j["frames"].getElems()
+  var intv = j["interval"].getInt()
+
+  Spinny(text: text, running: true, frames: frames, customSymbol: false, interval: intv)
 
 proc setSymbolColor*(spinny: Spinny, color: proc(x: string): string) =
   spinny.frames = map(spinny.frames, proc(node: JsonNode): JsonNode = newJString(node.getStr().color()))
@@ -80,7 +84,7 @@ proc spinnyLoop(spinny: Spinny) {.thread.} =
     stdout.write(spinny.frame & " " & spinny.text)
     stdout.flushFile()
     release(spinny.lock)
-    sleep(80)
+    sleep(spinny.interval)
 
     if frameCounter >= spinny.frames.len - 1:
       frameCounter = 0

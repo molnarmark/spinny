@@ -26,6 +26,8 @@ var spinnyChannel: Channel[SpinnyEvent]
 const spinners_json = staticRead("spinners.json")
 # let spinners_json = readFile("spinners.json")
 
+var spinners_parsed = parseJson($spinners_json)
+
 proc newSpinny*(text: string, spinner: string): Spinny =
   var j = parseJson($spinners_json)[spinner]
   var frames = j["frames"].getElems()
@@ -117,6 +119,7 @@ proc error*(spinny: Spinny, msg: string) =
 when isMainModule:
   var spinner1 = newSpinny("Loading file..".fgWhite, "dots")
   spinner1.setSymbolColor(colorize.fgBlue)
+
   spinner1.start()
 
   # do some work here
@@ -134,3 +137,14 @@ when isMainModule:
     sleep(500)
 
   spinner2.error("Sorry, something went wrong during downloading!")
+
+  var spinner3 = newSpinny("lolz, i is custom", @[%* "x", %* "y"])
+  spinner3.setSymbolColor(colorize.fgGreen)
+
+  spinner3.start()
+
+  # do some magnificent work here
+  for x in countup(1, 5):
+    sleep(500)
+
+  spinner3.success("Fancy my pants! It's working.")

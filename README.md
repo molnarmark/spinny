@@ -45,6 +45,21 @@ for x in countup(5, 10):
 spinner2.error("Sorry, something went wrong during downloading!")
 ```
 
+You can even use custom spinners, if one of the std aren't suitible for your needs.
+
+```nim
+var spinner3 = newSpinny("lolz, i is custom", @[%* "x", %* "y"])
+spinner3.setSymbolColor(colorize.fgGreen)
+
+spinner3.start()
+
+# do some magnificent work here
+for x in countup(1, 5):
+  sleep(500)
+
+spinner3.success("Fancy my pants! It's working.")
+```
+
 Spinny uses the [colorize](http://github.com/molnarmark/colorize) library for terminal colors.
 For spinners to use, take a look at the [spinners JSON file](https://github.com/molnarmark/spinny/blob/master/spinners.json). (Credit goes to [sindresorhus](https://github.com/sindresorhus/cli-spinners))
 

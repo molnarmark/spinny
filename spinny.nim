@@ -23,13 +23,19 @@ type
 
 var spinnyChannel: Channel[SpinnyEvent]
 
-const spinners_json = staticRead("spinners.json")
-# let spinners_json = readFile("spinners.json")
+# Default selection of spinners
+const default_json: string = staticRead("./resources/spinners.json")
 
-var spinners_parsed = parseJson($spinners_json)
+# Forward declarations
+proc loadSpinners(custom_spinners: string): JsonNode
 
-proc newSpinny*(text: string, spinner: string): Spinny =
-  var j = parseJson($spinners_json)[spinner]
+
+# Library definitions
+proc newSpinny*(text: string, spinType: string, customPath = ""): Spinny =
+
+  let spinners = loadSpinners(customPath)
+
+  var j = spinners[spinType]
   var frames = j["frames"].getElems()
   var intv = j["interval"].getInt()
 
@@ -116,6 +122,20 @@ proc error*(spinny: Spinny, msg: string) =
   spinny.stop()
 
 
+# Read the default selection of spinners or, if the user provided
+# a file path, load a custome selection instead.
+#
+proc loadSpinners(custom_spinners: string): JsonNode =
+  var spinners_json = default_json
+
+  if custom_spinners != "":
+    spinners_json = readFile(custom_spinners)
+
+  result = parseJson($spinners_json)
+
+
+# Use main runner for demonstration
+#
 when isMainModule:
   var spinner1 = newSpinny("Loading file..".fgWhite, "dots")
   spinner1.setSymbolColor(colorize.fgBlue)
@@ -148,3 +168,4 @@ when isMainModule:
     sleep(500)
 
   spinner3.success("Fancy my pants! It's working.")
+

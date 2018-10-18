@@ -77,6 +77,19 @@ The following procs are available on a `Spinny` object:
 * `error*(spinny: Spinny, msg: string)`
 
 
+## FAQs
+
+### Error with 'Threadpool' when using nimble
+If you encounter the following error when running `nimble build`:
+```bash
+.../.choosenim/toolchains/nim-0.19.0/lib/pure/concurrency/threadpool.nim(13, 10) Error: Threadpool requires --threads:on option.
+```
+
+Then try adding the following to your `nim.cfg` file:
+```
+threads:on
+```
+
 ## Contributing
 
 All contributions are welcome. Feel free to make this project better. :)

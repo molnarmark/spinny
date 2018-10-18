@@ -24,10 +24,10 @@ type
 var spinnyChannel: Channel[SpinnyEvent]
 
 # Default selection of spinners
-const default_json: string = staticRead("./resources/spinners.json")
+const defaultSpinners: string = staticRead("./resources/spinners.json")
 
 # Forward declarations
-proc loadSpinners(custom_spinners: string): JsonNode
+proc loadSpinners(customSpinners: string): JsonNode
 
 
 # Library definitions
@@ -125,13 +125,13 @@ proc error*(spinny: Spinny, msg: string) =
 # Read the default selection of spinners or, if the user provided
 # a file path, load a custome selection instead.
 #
-proc loadSpinners(custom_spinners: string): JsonNode =
-  var spinners_json = default_json
+proc loadSpinners(customSpinners: string): JsonNode =
+  var spinnersJson = defaultSpinners
 
-  if custom_spinners != "":
-    spinners_json = readFile(custom_spinners)
+  if customSpinners != "":
+    spinnersJson = readFile(customSpinners)
 
-  result = parseJson($spinners_json)
+  result = parseJson($spinnersJson)
 
 
 # Use main runner for demonstration
@@ -168,4 +168,3 @@ when isMainModule:
     sleep(500)
 
   spinner3.success("Fancy my pants! It's working.")
-

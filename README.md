@@ -48,7 +48,7 @@ spinner2.error("Sorry, something went wrong during downloading!")
 You can even use custom spinners, if one of the std aren't suitible for your needs.
 
 ```nim
-var spinner3 = newSpinny("lolz, i is custom", @[%* "x", %* "y"])
+var spinner3 = newSpinny("I'm custom.", @[%* "x", %* "y"])
 spinner3.setSymbolColor(colorize.fgGreen)
 
 spinner3.start()
@@ -57,7 +57,7 @@ spinner3.start()
 for x in countup(1, 5):
   sleep(500)
 
-spinner3.success("Fancy my pants! It's working.")
+spinner3.success("Looks like it's working!")
 ```
 
 Spinny uses the [colorize](http://github.com/molnarmark/colorize) library for terminal colors.

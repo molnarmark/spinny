@@ -1,3 +1,6 @@
+# Spinners here are from https://github.com/sindresorhus/cli-spinners
+# converted to Nim with
+# https://gist.github.com/Yardanico/4137a09f171bfceae0b1dc531fdcc631
 type
   SpinnerKind* = enum
     Dots, Dots2, Dots3, Dots4, Dots5, Dots6, Dots7, Dots8, Dots9,
@@ -9,9 +12,13 @@ type
     Toggle9, Toggle10, Toggle11, Toggle12, Toggle13, Arrow, Arrow2, Arrow3,
     BouncingBar, BouncingB​‌​all, Smiley, Monkey, Hearts,
     Clock, Earth, Moon, Runner, Pong, Shark, Dqpb
+
   Spinner* = object
     interval*: int
     frames*: seq[string]
+
+proc makeSpinner*(interval: int, frames: seq[string]): Spinner =
+  Spinner(interval: interval, frames: frames)
 
 const Spinners*: array[SpinnerKind, Spinner] = [
   # Dots

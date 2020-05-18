@@ -14,18 +14,22 @@ You can use Nimble to install the package by running:
 nimble install spinny
 ```
 
-Feel free to take the [example code](https://github.com/molnarmark/spinny/blob/master/spinny.nim#L112) to test out the package!
+This library uses threads for spinners, so you have to compile your application
+(or add to your ``nim.cfg``):
+```
+--threads:on
+```
 
 
 ## Usage
 
-Spinny is quite easy to use. You can set an already running `Spinny`'s symbol, color, or even the text!
+Spinny is quite easy to use. You can set the color, text or symbol of an already running spinner.
 
 ```nim
-import spinny, colorize, os
+import spinny, os
 
-var spinner1 = newSpinny("Loading file..".fgWhite, "dots")
-spinner1.setSymbolColor(colorize.fgBlue)
+var spinner1 = newSpinny("Loading file..".fgWhite, Dots)
+spinner1.setSymbolColor(fgBlue)
 spinner1.start()
 
 # do some work here
@@ -34,8 +38,8 @@ for x in countup(5, 10):
 
 spinner1.success("File was loaded successfully.")
 
-var spinner2 = newSpinny("Downloading files..".fgBlue, "dots5")
-spinner2.setSymbolColor(colorize.fgLightBlue)
+var spinner2 = newSpinny("Downloading files..".fgBlue, Dots5)
+spinner2.setSymbolColor(fgLightBlue)
 spinner2.start()
 
 # do some work here
@@ -45,12 +49,15 @@ for x in countup(5, 10):
 spinner2.error("Sorry, something went wrong during downloading!")
 ```
 
-You can even use custom spinners, if one of the std aren't suitible for your needs.
+You can even use custom spinners if predefined ones aren't suitable for your needs.
 
 ```nim
-var spinner3 = newSpinny("I'm custom.", @[%* "x", %* "y"])
-spinner3.setSymbolColor(colorize.fgGreen)
+import spinny, os
 
+# makeSpinner accepts two arguments - the interval between different frames,
+# and frames themselves (as a sequence of strings)
+var spinner3 = newSpinny("I'm custom.", makeSpinner(100, @["x", "y"]))
+spinner3.setSymbolColor(fgGreen)
 spinner3.start()
 
 # do some magnificent work here
@@ -60,8 +67,8 @@ for x in countup(1, 5):
 spinner3.success("Looks like it's working!")
 ```
 
-Spinny uses the [colorize](http://github.com/molnarmark/colorize) library for terminal colors.
-For spinners to use, take a look at the [spinners JSON file](https://github.com/molnarmark/spinny/blob/master/spinners.json). (Credit goes to [sindresorhus](https://github.com/sindresorhus/cli-spinners))
+Spinny embeds the [colorize](http://github.com/molnarmark/colorize) library for terminal colors.
+For spinners to use, take a look at the ``src/spinners.nim`` file. (Credit goes to [sindresorhus](https://github.com/sindresorhus/cli-spinners))
 
 
 ## API Reference
@@ -69,26 +76,12 @@ For spinners to use, take a look at the [spinners JSON file](https://github.com/
 The following procs are available on a `Spinny` object:
 
 * `setSymbolColor*(spinny: Spinny, color: proc(x: string): string)`
-* `setSymbol*(spinny: Spinny, newSymbol: string)`
-* `setText*(spinny: Spinny, newSymbol: string)`
+* `setSymbol*(spinny: Spinny, symbol: string)`
+* `setText*(spinny: Spinny, text: string)`
 * `start*(spinny: Spinny)`
 * `stop*(spinny: Spinny)`
 * `success*(spinny: Spinny, msg: string)`
 * `error*(spinny: Spinny, msg: string)`
-
-
-## FAQs
-
-### Error with 'Threadpool' when using nimble
-If you encounter the following error when running `nimble build`:
-```bash
-.../.choosenim/toolchains/nim-0.19.0/lib/pure/concurrency/threadpool.nim(13, 10) Error: Threadpool requires --threads:on option.
-```
-
-Then try adding the following to your `nim.cfg` file:
-```
-threads:on
-```
 
 ## Contributing
 

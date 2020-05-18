@@ -3,7 +3,9 @@ import sequtils
 
 import colorize
 import spinners
-export colorize, spinners.SpinnerKind, spinners.Spinner
+
+export colorize
+export SpinnerKind, Spinner, makeSpinner
 
 type
   Spinny = ref object
@@ -41,11 +43,11 @@ proc newSpinny*(text: string, spinType: SpinnerKind): Spinny =
 proc setSymbolColor*(spinny: Spinny, color: proc(x: string): string) =
   spinny.frames = mapIt(spinny.frames, color(it))
 
-proc setSymbol*(spinny: Spinny, newSymbol: string) =
-  spinnyChannel.send(SpinnyEvent(kind: SymbolChange, payload: newSymbol))
+proc setSymbol*(spinny: Spinny, symbol: string) =
+  spinnyChannel.send(SpinnyEvent(kind: SymbolChange, payload: symbol))
 
-proc setText*(spinny: Spinny, newSymbol: string) =
-  spinnyChannel.send(SpinnyEvent(kind: TextChange, payload: newSymbol))
+proc setText*(spinny: Spinny, text: string) =
+  spinnyChannel.send(SpinnyEvent(kind: TextChange, payload: text))
 
 proc handleEvent(spinny: Spinny, eventData: SpinnyEvent): bool =
   result = true
@@ -103,36 +105,17 @@ proc start*(spinny: Spinny) =
   spinnyChannel.open()
   createThread(spinny.t, spinnyLoop, spinny)
 
-proc stop*(spinny: Spinny, kind = Stop, payload = "") =
+proc stop(spinny: Spinny, kind: EventKind, payload = "") =
   spinnyChannel.send(SpinnyEvent(kind: kind, payload: payload))
   spinnyChannel.send(SpinnyEvent(kind: Stop))
   joinThread(spinny.t)
   echo ""
+
+proc stop*(spinny: Spinny) =
+  spinny.stop(Stop)
 
 proc success*(spinny: Spinny, msg: string) =
   spinny.stop(StopSuccess, msg)
 
 proc error*(spinny: Spinny, msg: string) =
   spinny.stop(StopError, msg)
-
-when isMainModule:
-  var spinner1 = newSpinny("Loading file..".fgWhite, Dots)
-  spinner1.setSymbolColor(colorize.fgBlue)
-  spinner1.start()
-
-  # Do some 'work'
-  for _ in 0 .. 10:
-    sleep(200)
-
-  spinner1.success("File was loaded successfully.")
-
-  var spinner2 = newSpinny("Downloading files..".fgYellow, Clock)
-
-  spinner2.setSymbolColor(colorize.fgLightBlue)
-  spinner2.start()
-
-  # Do some 'work'
-  for _ in 0 .. 10:
-    sleep(200)
-
-  spinner2.error("Sorry, something went wrong during downloading!")

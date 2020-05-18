@@ -1,3 +1,4 @@
+# https://github.com/molnarmark/colorize
 proc reset(): string = "\e[0m"
 
 # foreground colors

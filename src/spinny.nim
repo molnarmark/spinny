@@ -1,8 +1,7 @@
 import os, terminal, locks
 import sequtils
 
-import colorize
-import spinners
+import spinny/[colorize, spinners]
 
 export colorize
 export SpinnerKind, Spinner, makeSpinner
